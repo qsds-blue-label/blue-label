@@ -52,7 +52,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../kanban.html" class="nav-link">
+                <a href="/import" class="nav-link">
                   <i class="nav-icon fas fa-file-import"></i>
                   <p>
                     Import

@@ -39,7 +39,24 @@
             </div>
           </div>
           <div class="card-body">
-            Start creating your amazing application!
+            <div class="panel-body">
+                    <span id="message"></span>
+                    <form id="sample_form" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-4 control-label">Select CSV File</label>
+                            <input type="file" name="file" id="file" />
+                        </div>
+                        <div class="form-group" align="center">
+                            <input type="hidden" name="hidden_field" value="1" />
+                            <input type="submit" name="import" id="import" class="btn btn-info" value="Import" />
+                        </div>
+                    </form>
+                    <div class="form-group" id="process" style="display: none;">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="process_data">0</span> - <span id="total_data">0</span></div>
+                        </div>
+                    </div>
+                </div>
           </div>
           <!-- /.card-body -->
           <div class="card-footer">
