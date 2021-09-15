@@ -1,3 +1,7 @@
 .navy-blue {
     background-color: #00008b;
 }
+
+.flexHorizontal {
+    flex-direction: row;
+}
