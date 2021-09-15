@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVotesTable extends Migration
+class CreateImportedFileTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateVotesTable extends Migration
      */
     public function up()
     {
-        Schema::create('votes', function (Blueprint $table) {
+        Schema::create('imported_files', function (Blueprint $table) {
             $table->id();
-            $table->integer('imported_id')->length(11);
-            $table->integer('voters_id')->length(11);
-            $table->integer('candidate_id')->length(11);
-            $table->date('date');
+            $table->integer('uploaded_by')->length(11);
+            $table->integer('number_of_rows')->length(11);
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ class CreateVotesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('votes');
+        Schema::dropIfExists('imported_files');
     }
 }

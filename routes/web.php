@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\AuthController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,13 +19,27 @@ use App\Http\Controllers\ImportController;
 */
 
 Route::get('/', function () {
+    //Session::forget('user');
+    if(!Session::get('user')){
+        return redirect('/login');
+    }
     return view('index');
 });
+
+
+
 
 Route::get('/import', function () {
     return view('import');
 });
 
+
+
+Route::get('/login', function () {
+    return view('login');
+});
+
+Route::post('/check-login', [AuthController::class, 'checkLogin']);
 Route::post('/test', [ImportController::class, 'index']);
 Route::post('/import-file', [ImportController::class, 'index']);
 

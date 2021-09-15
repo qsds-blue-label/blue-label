@@ -21,6 +21,7 @@ class CreateVotersTable extends Migration
             $table->string('precent');
             $table->string('municipality');
             $table->string('barangay');
+            $table->string('district');
             $table->string('age');
             $table->timestamps();
         });
