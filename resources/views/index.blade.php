@@ -9,7 +9,7 @@
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
-              <h1>Blank Page</h1>
+              <h1>DASHBOARD</h1>
             </div>
             <div class="col-sm-6">
               <ol class="breadcrumb float-sm-right">
@@ -27,36 +27,84 @@
         <!-- Default box -->
         <div class="card">
           <div class="card-header">
-            <h3 class="card-title">Title</h3>
-  
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                <i class="fas fa-minus"></i>
-              </button>
-              <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                <i class="fas fa-times"></i>
-              </button>
+            <h3 class="card-title">Graph Data</h3>
+            <div class="card-tools flexHorizontal">
+              <div class="row">
+                <div class="input-group">
+                  <button type="button" class="btn btn-default float-right" id="daterange-btn">
+                    <i class="far fa-calendar-alt"></i> Date filter
+                    <i class="fas fa-caret-down"></i>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+          </div>
           <div class="card-body">
-            <div class="panel-body">
-                    <span id="message"></span>
-                    <form id="sample_form" method="POST" enctype="multipart/form-data" class="form-horizontal">
-                        <div class="form-group">
-                            <label class="col-md-4 control-label">Select CSV File</label>
-                            <input type="file" name="file" id="file" />
-                        </div>
-                        <div class="form-group" align="center">
-                            <input type="hidden" name="hidden_field" value="1" />
-                            <input type="submit" name="import" id="import" class="btn btn-info" value="Import" />
-                        </div>
-                    </form>
-                    <div class="form-group" id="process" style="display: none;">
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="process_data">0</span> - <span id="total_data">0</span></div>
-                        </div>
-                    </div>
+            <div class="row">
+              <div class="col-md-12">
+                <!-- DONUT CHART -->
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">OverAll Result</h3>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="donutChart" style="min-height: 500px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
+                <!-- /.card -->
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-12">
+                <!-- BAR CHART -->
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Monthly Data Count</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+              </div>
+              <div class="col-md-12">
+              <!-- STACKED BAR CHART -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Per Barangay</h3>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+                </div>
+              <div class="col-md-12">
+              <!-- STACKED BAR CHART -->
+              <div class="card card-primary">
+                <div class="card-header">
+                  <h3 class="card-title">Per Municipality</h3>
+                </div>
+                <div class="card-body">
+                  <div class="chart">
+                    <canvas id="data-muni" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                  </div>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+                </div>
+            </div>
+
           </div>
           <!-- /.card-body -->
           <div class="card-footer">
