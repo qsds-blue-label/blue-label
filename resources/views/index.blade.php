@@ -31,7 +31,7 @@
             <div class="card-tools flexHorizontal">
               <div class="row">
                 <div class="input-group">
-                  <button type="button" class="btn btn-default float-right" id="daterange-btn">
+                  <button type="button" onclick="rangeFilter()" class="btn btn-default float-right" id="daterange-btn">
                     <i class="far fa-calendar-alt"></i> Date filter
                     <i class="fas fa-caret-down"></i>
                   </button>

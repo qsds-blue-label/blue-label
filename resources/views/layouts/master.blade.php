@@ -65,12 +65,18 @@
         <script src="{{url('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
         <!-- Toastr -->
         <script src="{{url('plugins/toastr/toastr.min.js')}}"></script>
+        <!-- Date -->
         <script src="{{url('js/datepicker.js')}}"></script>
+        <script src="{{url('js/moment.min.js')}}"></script>
+        <script src="{{url('js/daterangepicker.js')}}"></script>
+        <!-- Chart -->
         <script src="{{url('js/Chart.min.js')}}"></script>
         <!-- Datatables -->
         <script src="{{url('plugins/datatables/jquery.dataTables.min.js')}}"></script>
         <script src="{{url('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
         <script src="{{url('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+
+
         <script>
             $.ajaxSetup({
                headers: {
@@ -133,26 +139,29 @@
             });
         });
            
-        </script> -->
-        </script>
+        </script> 
+        </script>-->
 
         <script>
-            $(function () {
-                var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
-                var donutData        = {
-                    labels: [
-                        'JTU',
-                        'OSM',
-                        'PMU'
-                    ],
+            $(document).ready(function () {
+                let donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+                const donutlabels = [];
+                const donutCount = [];
+                @foreach($overall as $all)
+                    donutlabels.push('{{ $all->cadidate_code }}');
+                    donutCount.push('{{ $all->totalCount }}');
+                @endforeach
+                
+                let donutData = {
+                    labels: donutlabels,
                     datasets: [
                     {
-                        data: [700,900,300],
+                        data: donutCount,
                         backgroundColor : ['#FFC0CB', '#00a65a', '#654321'],
                     }
                     ]
                 }
-                var donutOptions     = {
+                let donutOptions     = {
                     maintainAspectRatio : false,
                     responsive : true,
                 }
@@ -164,45 +173,34 @@
                     options: donutOptions
                 })
 
-                var areaChartData = {
-                labels  : ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                    {
-                    label               : 'JTU',
-                    backgroundColor     : '#FFC0CB',
-                    borderColor         : 'rgba(60,141,188,0.8)',
-                    pointRadius          : false,
-                    pointColor          : '#3b8bba',
-                    pointStrokeColor    : 'rgba(60,141,188,1)',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data                : [28, 48, 40, 19, 86, 27, 90]
-                    },
-                    {
-                    label               : 'OSM',
-                    backgroundColor     : '#00a65a',
-                    borderColor         : 'rgba(210, 214, 222, 1)',
-                    pointRadius         : false,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : [65, 59, 80, 81, 56, 55, 40]
-                    },
-                    {
-                    label               : 'PMU',
-                    backgroundColor     : '#654321',
-                    borderColor         : 'rgba(210, 214, 222, 1)',
-                    pointRadius         : false,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : [60, 50, 73, 90, 50, 55, 55]
-                    },
-                ]
+                const areaChartLabelMonthly = [];
+                const dataSetMonthly = [];
+                let monlyLabelData = {};
+                let votesMonthCount = [];
+                @foreach($monthly['monthlist'] as $monthName)
+                    areaChartLabelMonthly.push('{{ $monthName }}');
+                @endforeach
+
+                @foreach($monthly['votes'] as $key => $voteMonth)
+                    monlyLabelData = {};
+                    monlyLabelData = {
+                        label               : '{{ $key }}',
+                        backgroundColor     : '#FFC0CB',
+                    }
+                    @foreach($voteMonth as $voteCount)
+                        votesMonthCount.push({{$voteCount}});
+                    @endforeach
+                    monlyLabelData.data = votesMonthCount;
+                    votesMonthCount = [];
+                    console.log('monlyLabelData', monlyLabelData)
+                    dataSetMonthly.push(monlyLabelData);
+                @endforeach
+
+                let areaChartData = {
+                    labels  : areaChartLabelMonthly,
+                    datasets: dataSetMonthly,
                 }
-                var perBarangay = {
+                let perBarangay = {
                 labels  : ['Barangay 1', 'Barangay 2', 'Barangay 3', 'Barangay 4', 'Barangay 5', 'Barangay 6', 'Barangay 7'],
                 datasets: [
                     {
@@ -240,7 +238,7 @@
                     },
                 ]
                 }
-                var perMuni = {
+                let perMuni = {
                 labels  : ['Municipality 1', 'Municipality 2', 'Municipality 3', 'Municipality 4', 'Municipality 5', 'Municipality 6', 'Municipality 7'],
                 datasets: [
                     {
@@ -282,17 +280,24 @@
                 //-------------
                 //- BAR CHART -
                 //-------------
-                var barChartCanvas = $('#barChart').get(0).getContext('2d')
-                var barChartData = $.extend(true, {}, areaChartData)
-                var temp0 = areaChartData.datasets[0]
-                var temp1 = areaChartData.datasets[1]
+                let barChartCanvas = $('#barChart').get(0).getContext('2d')
+                let barChartData = $.extend(true, {}, areaChartData)
+                let temp0 = areaChartData.datasets[0]
+                let temp1 = areaChartData.datasets[1]
                 barChartData.datasets[0] = temp1
                 barChartData.datasets[1] = temp0
 
-                var barChartOptions = {
-                responsive              : true,
-                maintainAspectRatio     : false,
-                datasetFill             : false
+                let barChartOptions = {
+                    responsive              : true,
+                    maintainAspectRatio     : false,
+                    datasetFill             : false,
+                    scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
                 }
 
                 new Chart(barChartCanvas, {
@@ -304,10 +309,10 @@
                 //---------------------
                 //- STACKED BAR CHART -
                 //---------------------
-                var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
-                var stackedBarChartData = $.extend(true, {}, perBarangay)
+                let stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+                let stackedBarChartData = $.extend(true, {}, perBarangay)
 
-                var stackedBarChartOptions = {
+                let stackedBarChartOptions = {
                     responsive              : true,
                     maintainAspectRatio     : false,
                     scales: {
@@ -325,10 +330,10 @@
                     options: stackedBarChartOptions
                 })
                 
-                var stackedBarChartCanvas1 = $('#data-muni').get(0).getContext('2d')
-                var stackedBarChartData1 = $.extend(true, {}, perMuni)
+                let stackedBarChartCanvas1 = $('#data-muni').get(0).getContext('2d')
+                let stackedBarChartData1 = $.extend(true, {}, perMuni)
 
-                var stackedBarChartOptions1 = {
+                let stackedBarChartOptions1 = {
                     responsive              : true,
                     maintainAspectRatio     : false,
                     scales: {
@@ -365,6 +370,11 @@
                 }
                 )
 
+            });
+
+            $('#daterange-btn').on('apply.daterangepicker', function(ev, {startDate, endDate}) {
+                console.log('startDate', startDate.format('MM/DD/YYYY'))
+                console.log('endDate', endDate.format('MM/DD/YYYY'))
             });
 
         </script>

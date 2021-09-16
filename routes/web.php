@@ -7,6 +7,7 @@ use App\Http\Controllers\ImportController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VotersController;
 use App\Http\Controllers\VotesController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,12 +20,7 @@ use App\Http\Controllers\VotesController;
 |
 */
 
-Route::get('/', function () {
-    if(!Session::get('user')){
-        return redirect('/login');
-    }
-    return view('index');
-});
+Route::get('/', [DashboardController::class, 'index']);
 
 
 Route::get('/logout', function () {
