@@ -27,6 +27,22 @@
         <link rel="stylesheet" href="{{url('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
         <link rel="stylesheet" href="{{url('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
         <style>
+            .btn-primary {
+            color: #fff !important;
+            background-color: #a99233 !important;
+            border-color: #a99233 !important;
+            box-shadow: none !important;
+            }
+
+            .btn-outline-primary {
+                color: #a99233 !important;
+                border-color: #a99233 !important;
+                background-color: transparent !important;
+            }
+            .btn-outline-primary:hover{
+                background-color: #a99233 !important;
+                color: #fff !important;
+            }
         </style>
         <meta name="csrf-token" content="{{ csrf_token() }}" />
     </head>
@@ -54,19 +70,6 @@
         <script src="{{url('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
         <script src="{{url('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
         <script>
-            $(function () {
-              $('#example2').DataTable({
-                "paging": true,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": false,
-                "info": true,
-                "autoWidth": false,
-                "responsive": true,
-              });
-            });
-        </script>
-        <script>
             $.ajaxSetup({
                headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -78,50 +81,56 @@
              showConfirmButton: false,
              timer: 3000
             });
-            
-               $(document).ready(function () {
-                  
-                   var clear_timer;
-                   $("#sample_form").on("submit", function (event) {
-                       $("#message").html("");
-                       event.preventDefault();
-                       $.ajax({
-                           url: "import-file",
-                           method: "post",
-                           data: new FormData(this),
-                           //dataType:"json",
-                           contentType: false,
-                           cache: false,
-                           processData: false,
-                           beforeSend: function () {
-                               $("#import").val("Importing");
-                           },
-                           success: function (data) {  console.log('data', data)
-                               toastr.success('Votes successfully imported.')
-                               setTimeout(() => {
-                                  location.reload();
-                               }, 2000);
-                           },
-                       });
-                   });
-               });
-        </script>
-        <script>
-            $(function() {
-              $('[data-toggle="datepicker"]').datepicker({
-                autoHide: true,
-                zIndex: 2048,
-                format: 'yyyy-mm-dd'
-              });
-            });
-            $(document).on('change', 'input[type="file"]', function (event) { 
-                var filename = $(this).val();
-                if (filename == undefined || filename == ""){
-                $(this).next('.custom-file-label').html('No file chosen');
+        </script>    
+       <?php if(Request::path() === 'import') { ?>
+        <script src="{{url('js/import.js')}}"></script>
+       <?php } ?>
+       <?php if(Request::path() === 'voters') { ?>
+        <script src="{{url('js/voters.js')}}"></script>
+       <?php } ?>
+       <?php if(Request::path() === 'votes') { ?>
+        <script src="{{url('js/votes.js')}}"></script>
+       <?php } ?>
+        <!-- <script>
+        $(function() {
+            var oTable = $('#example2').DataTable({
+                "bDestroy": true,
+                "aaSorting": [],
+                "ordering": false,
+                "searching": true,
+                "iDisplayLength": 20,
+                "aLengthMenu": [
+                    [20, 50, 100, 200, 500],
+                    [20, 50, 100, 200, 500]
+                ],
+                /* "responsive": true,*/
+                "processing": true,
+                // "scrollX": true, // enables horizontal scrolling    
+                /* "stateSave": true,*/ //restore table state on page reload, 
+                "oLanguage": {
+                    "sSearch": '<div class="input-group">_INPUT_<span class="input-group-addon"><i class="icon-search"></i></span></div>',
+                    "sSearchPlaceholder": "Search...",
+                   // "sProcessing": '' + image + '',
+                },
+                "serverSide": true,
+                "ajax": {
+                    url: "import-list",
+                    type: 'POST',
+                    dataFilter: function(data) { // console.log(data);
+                        // var json = jQuery.parseJSON(data);
+                        // json.recordsTotal = json.recordsFiltered;
+                        // json.recordsFiltered = json.recordsFiltered;
+                        // json.data = json.data;
+                        // checkSummary(json.queryTotal);
+                        // return JSON.stringify(json);
+                    }
+
+
                 }
-                else 
-                { $(this).next('.custom-file-label').html(event.target.files[0].name); }
+
             });
-        </script>
+        });
+           
+        </script> -->
     </body>
 </html>

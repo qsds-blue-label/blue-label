@@ -5,7 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ImportController;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\VotersController;
+use App\Http\Controllers\VotesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,6 @@ use App\Http\Controllers\AuthController;
 */
 
 Route::get('/', function () {
-    //Session::forget('user');
     if(!Session::get('user')){
         return redirect('/login');
     }
@@ -27,11 +27,14 @@ Route::get('/', function () {
 });
 
 
-
-
-Route::get('/import', function () {
-    return view('import');
+Route::get('/logout', function () {
+    Session::forget('user');
+    return redirect('/login');
 });
+
+// Route::get('/import', function () {
+//     return view('import');
+// });
 
 
 
@@ -41,5 +44,8 @@ Route::get('/login', function () {
 
 Route::post('/check-login', [AuthController::class, 'checkLogin']);
 Route::post('/test', [ImportController::class, 'index']);
-Route::post('/import-file', [ImportController::class, 'index']);
-
+Route::get('/import', [ImportController::class, 'index']);
+Route::post('/import-file', [ImportController::class, 'import']);
+Route::post('/import-list', [ImportController::class, 'list']);
+Route::get('/voters', [VotersController::class, 'index']);
+Route::get('/votes', [VotesController::class, 'index']);

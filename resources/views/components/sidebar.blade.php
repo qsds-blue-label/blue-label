@@ -44,10 +44,18 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../gallery.html" class="nav-link">
+                <a href="./voters" class="nav-link">
                   <i class="nav-icon far fa-user"></i>
                   <p>
                     Voters
+                  </p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./votes" class="nav-link">
+                  <i class="nav-icon far fa-user"></i>
+                  <p>
+                    Votes
                   </p>
                 </a>
               </li>

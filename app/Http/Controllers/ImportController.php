@@ -20,7 +20,13 @@ class ImportController extends Controller {
     public function downloadExcel(){
         return Excel::download(new UsersExport, 'billing-report.xlsx');
     }
-    public function index(Request $request) { 
+
+    public function index(Request $request) {
+        $list = Imported_files::orderBy('id', 'DESC')->get();
+        return view('import', ['list' => $list]);
+    }
+
+    public function import(Request $request) { 
         $excel = Importer::make('Excel');
         $date = $request->date;
         $filepath = $request->file('file')->getRealPath();
@@ -86,4 +92,16 @@ class ImportController extends Controller {
     
       //return response()->json(array('msg'=> $collection), 200);
     }
+
+    public function list(Request $request) {
+        $data = array();
+        $search = $_POST['search'];
+        $draw = $_POST['draw'];
+        $length = $_POST['length'];
+        $start = $_POST['start'];
+        //$query_sales = "SELECT * FROM tbl_sales INNER JOIN tbl_users ON tbl_sales.user_id=tbl_users.user_id  LEFT JOIN tbl_customer ON tbl_sales.cust_id=tbl_customer.cust_id  WHERE  sales_date BETWEEN  '$today' AND '$date_add' $user_query  $customer_query $query_status $query_register $query_type GROUP BY tbl_sales.sales_no ORDER BY sales_id DESC  LIMIT $length  OFFSET  $start ";
+        var_dump($_POST['length']);
+    } 
+
+    
 }
