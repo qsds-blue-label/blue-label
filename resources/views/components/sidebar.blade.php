@@ -36,7 +36,7 @@
 
               <li class="nav-header">DASHBOARD</li>
               <li class="nav-item">
-                <a href="../calendar.html" class="nav-link">
+                <a href="/" class="nav-link">
                   <i class="nav-icon far fa-chart-bar"></i>
                   <p>
                     Chart Data
