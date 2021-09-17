@@ -100,6 +100,7 @@
         <script src="{{url('js/votes.js')}}"></script>
        <?php } ?>
 
+       @if(Request::path() === '/')
         <script>
             $(document).ready(function () {
                 let donutChartCanvas = $('#donutChart').get(0).getContext('2d')
@@ -340,5 +341,6 @@
             }
 
         </script>
+        @endif
     </body>
 </html>
