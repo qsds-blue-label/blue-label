@@ -17,20 +17,47 @@ class DashboardController extends Controller
             return redirect('/login');
         }
 
-        $voteData = Votes::with(['candidate'])->get();
         $candidates = Candidate::with(['votes'])->get();
 
+        $today = Carbon::today()->format('Y-m-d');
+        $lastWeek = Carbon::today()->subDays(60)->format('Y-m-d');
+
         // TOTAL VOTES
+        $overAllVoteData = $this->getTotalVotes($candidates);
+        // PER MONTH VOTES
+        $perMonth = $this->getPerMonthVotes($candidates, $today, $lastWeek);
+        // PER BARANGAY VOTES
+        $perBarangay = $this->getPerBarangayVotes($candidates, $today, $lastWeek);
+        // PER MUNICIPALITY VOTES
+        $perMunicipality = $this->getPerMunicipalityVotes($candidates, $today, $lastWeek);
+
+
+        $dataChart = array(
+            'overall' => $overAllVoteData,
+            'monthly' => $perMonth,
+            'barangay' => $perBarangay,
+            'municipality' => $perMunicipality,
+        );
+
+        // dd($dataChart);
+
+        return view('index', $dataChart);
+    }
+
+    public function getTotalVotes($candidates) {
+        $voteData = Votes::with(['candidate'])->get();
+
         $overAllVoteData = array();
         foreach ($candidates as $vote) {
             $data = $vote;
             $data->totalCount = count($vote->votes);
             array_push($overAllVoteData, $data);
         }
+        return $overAllVoteData;
+    }
 
-        // PER MONTH VOTES
-        $today = Carbon::today()->format('Y-m-d');
-        $lastWeek = Carbon::today()->subDays(31)->format('Y-m-d');
+    public function getPerMonthVotes($candidates, $today, $lastWeek) {
+
         $monthlyResult = Votes::with(['candidate'])
             ->whereBetween('date', [$lastWeek, $today])
             ->orderBy('date', 'ASC')
@@ -79,55 +106,106 @@ class DashboardController extends Controller
         $perMonth['monthlist'] = $monthList;
         $perMonth['votes'] = $monthlyCandidateTotal;
 
-        $dataChart = array(
-            'overall' => $overAllVoteData,
-            'monthly' => $perMonth,
-        );
-
-        // dd($dataChart);
-
-        return view('index', $dataChart);
+        return $perMonth;
     }
 
+    public function getPerMunicipalityVotes($candidates, $today, $lastWeek) {
+        $municipalityResult = Votes::with(['candidate', 'voter_data'])
+            ->whereBetween('date', [$lastWeek, $today])
+            ->orderBy('date', 'ASC')
+            ->get()
+            ->groupBy(function($val) {
+                return $val->voter_data->municipality;
+            });
+        $municipalityList = array();
+        $municipalityData = array();
+        $perMunicipality = array();
+        foreach ($municipalityResult as $key => $res) {
+            $dataMunicipality = array();
+            $dataMunicipality['barangay'] = $key;
 
-    public function getMonth($month) {
-        switch ($month) {
-            case 1:
-                return 'January';
-                break;
-            case 2:
-                return 'February';
-                break;
-            case 3:
-                return 'March';
-                break;
-            case 4:
-                return 'April';
-                break;
-            case 5:
-                return 'May';
-                break;
-            case 6:
-                return 'June';
-                break;
-            case 7:
-                return 'July';
-                break;
-            case 8:
-                return 'August';
-                break;
-            case 9:
-                return 'September';
-                break;
-            case 10:
-                return 'October';
-                break;
-            case 11:
-                return 'November';
-                break;
-            case 12:
-                return 'December';
-                break;
-          }
+            array_push($municipalityList, $key);
+
+            $votes = [];
+            foreach ($res as $object) {
+                if (isset($object->candidate_id)) {
+                    $vote = $object->candidate->cadidate_code;
+                    if (!isset($votes[$vote])) {
+                        $votes[$vote] = 0;
+                    }
+                    $votes[$vote]++;
+                }
+            }
+            $dataMunicipality['votes'] = $votes;
+            array_push($municipalityData, $dataMunicipality);
+        }
+
+        $municipalityCandidateTotal = array();
+        foreach ($candidates as $cand) {
+            $count = 0;
+            foreach ($municipalityData as $keyMon =>  $barData) {
+                $totVote = array();
+                foreach ($barData['votes'] as $key => $barDataVote) {
+                    if($key === $cand->cadidate_code) {
+                        $municipalityCandidateTotal[$key][$count] = $barDataVote;
+                    }
+                }
+                $count++;
+            }
+        }
+
+        $perMunicipality['municipalityList'] = $municipalityList;
+        $perMunicipality['votes'] = $municipalityCandidateTotal;
+        return $perMunicipality;
+    }
+
+    public function getPerBarangayVotes($candidates, $today, $lastWeek) {
+        $barangayResult = Votes::with(['candidate', 'voter_data'])
+            ->whereBetween('date', [$lastWeek, $today])
+            ->orderBy('date', 'ASC')
+            ->get()
+            ->groupBy(function($val) {
+                return $val->voter_data->barangay;
+            });
+        $barangayList = array();
+        $barangayData = array();
+        $perBarangay = array();
+        foreach ($barangayResult as $key => $res) {
+            $dataBarangay = array();
+            $dataBarangay['barangay'] = $key;
+
+            array_push($barangayList, $key);
+
+            $votes = [];
+            foreach ($res as $object) {
+                if (isset($object->candidate_id)) {
+                    $vote = $object->candidate->cadidate_code;
+                    if (!isset($votes[$vote])) {
+                        $votes[$vote] = 0;
+                    }
+                    $votes[$vote]++;
+                }
+            }
+            $dataBarangay['votes'] = $votes;
+            array_push($barangayData, $dataBarangay);
+        }
+
+        $barangayCandidateTotal = array();
+        foreach ($candidates as $cand) {
+            $count = 0;
+            foreach ($barangayData as $keyMon =>  $barData) {
+                $totVote = array();
+                foreach ($barData['votes'] as $key => $barDataVote) {
+                    if($key === $cand->cadidate_code) {
+                        $barangayCandidateTotal[$key][$count] = $barDataVote;
+                    }
+                }
+                $count++;
+            }
+        }
+
+        $perBarangay['barangayList'] = $barangayList;
+        $perBarangay['votes'] = $barangayCandidateTotal;
+        return $perBarangay;
     }
 }

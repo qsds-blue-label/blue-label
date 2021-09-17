@@ -99,48 +99,6 @@
        <?php if(Request::path() === 'votes') { ?>
         <script src="{{url('js/votes.js')}}"></script>
        <?php } ?>
-        <!-- <script>
-        $(function() {
-            var oTable = $('#example2').DataTable({
-                "bDestroy": true,
-                "aaSorting": [],
-                "ordering": false,
-                "searching": true,
-                "iDisplayLength": 20,
-                "aLengthMenu": [
-                    [20, 50, 100, 200, 500],
-                    [20, 50, 100, 200, 500]
-                ],
-                /* "responsive": true,*/
-                "processing": true,
-                // "scrollX": true, // enables horizontal scrolling    
-                /* "stateSave": true,*/ //restore table state on page reload, 
-                "oLanguage": {
-                    "sSearch": '<div class="input-group">_INPUT_<span class="input-group-addon"><i class="icon-search"></i></span></div>',
-                    "sSearchPlaceholder": "Search...",
-                   // "sProcessing": '' + image + '',
-                },
-                "serverSide": true,
-                "ajax": {
-                    url: "import-list",
-                    type: 'POST',
-                    dataFilter: function(data) { // console.log(data);
-                        // var json = jQuery.parseJSON(data);
-                        // json.recordsTotal = json.recordsFiltered;
-                        // json.recordsFiltered = json.recordsFiltered;
-                        // json.data = json.data;
-                        // checkSummary(json.queryTotal);
-                        // return JSON.stringify(json);
-                    }
-
-
-                }
-
-            });
-        });
-           
-        </script> 
-        </script>-->
 
         <script>
             $(document).ready(function () {
@@ -173,6 +131,7 @@
                     options: donutOptions
                 })
 
+                // PER MONTH DATA
                 const areaChartLabelMonthly = [];
                 const dataSetMonthly = [];
                 let monlyLabelData = {};
@@ -185,14 +144,13 @@
                     monlyLabelData = {};
                     monlyLabelData = {
                         label               : '{{ $key }}',
-                        backgroundColor     : '#FFC0CB',
+                        backgroundColor     : getColor('{{ $key }}'),
                     }
                     @foreach($voteMonth as $voteCount)
                         votesMonthCount.push({{$voteCount}});
                     @endforeach
                     monlyLabelData.data = votesMonthCount;
                     votesMonthCount = [];
-                    console.log('monlyLabelData', monlyLabelData)
                     dataSetMonthly.push(monlyLabelData);
                 @endforeach
 
@@ -200,85 +158,72 @@
                     labels  : areaChartLabelMonthly,
                     datasets: dataSetMonthly,
                 }
+                // END PER MONTH DATA
+
+                // PER BARANGAY DATA
+                const areaChartLabelBarangay = [];
+                const dataSetBarangay = [];
+                let barangayLabelData = {};
+                let votesBarangayCount = [];
+
+                @foreach($barangay['barangayList'] as $brgyName)
+                    areaChartLabelBarangay.push('{{ $brgyName }}');
+                @endforeach
+
+                @foreach($barangay['votes'] as $key => $voteBarangay)
+                    barangayLabelData = {};
+                    barangayLabelData = {
+                        label               : '{{ $key }}',
+                        backgroundColor     : getColor('{{ $key }}'),
+                    }
+                    @foreach($voteBarangay as $voteCount)
+                        votesBarangayCount.push({{$voteCount}});
+                    @endforeach
+                    barangayLabelData.data = votesBarangayCount;
+                    votesBarangayCount = [];
+                    dataSetBarangay.push(barangayLabelData);
+                @endforeach
+
                 let perBarangay = {
-                labels  : ['Barangay 1', 'Barangay 2', 'Barangay 3', 'Barangay 4', 'Barangay 5', 'Barangay 6', 'Barangay 7'],
-                datasets: [
-                    {
-                    label               : 'JTU',
-                    backgroundColor     : '#FFC0CB',
-                    borderColor         : 'rgba(60,141,188,0.8)',
-                    pointRadius          : false,
-                    pointColor          : '#3b8bba',
-                    pointStrokeColor    : 'rgba(60,141,188,1)',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data                : [28, 48, 40, 19, 86, 27, 90]
-                    },
-                    {
-                    label               : 'OSM',
-                    backgroundColor     : '#00a65a',
-                    borderColor         : 'rgba(210, 214, 222, 1)',
-                    pointRadius         : false,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : [65, 59, 80, 81, 56, 55, 40]
-                    },
-                    {
-                    label               : 'PMU',
-                    backgroundColor     : '#654321',
-                    borderColor         : 'rgba(210, 214, 222, 1)',
-                    pointRadius         : false,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : [60, 50, 73, 90, 50, 55, 55]
-                    },
-                ]
-                }
-                let perMuni = {
-                labels  : ['Municipality 1', 'Municipality 2', 'Municipality 3', 'Municipality 4', 'Municipality 5', 'Municipality 6', 'Municipality 7'],
-                datasets: [
-                    {
-                    label               : 'JTU',
-                    backgroundColor     : '#FFC0CB',
-                    borderColor         : 'rgba(60,141,188,0.8)',
-                    pointRadius          : false,
-                    pointColor          : '#3b8bba',
-                    pointStrokeColor    : 'rgba(60,141,188,1)',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data                : [120, 150, 90, 80, 100, 70, 50]
-                    },
-                    {
-                    label               : 'OSM',
-                    backgroundColor     : '#00a65a',
-                    borderColor         : 'rgba(210, 214, 222, 1)',
-                    pointRadius         : false,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : [150, 100, 150, 170, 200, 160, 110]
-                    },
-                    {
-                    label               : 'PMU',
-                    backgroundColor     : '#654321',
-                    borderColor         : 'rgba(210, 214, 222, 1)',
-                    pointRadius         : false,
-                    pointColor          : 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor    : '#c1c7d1',
-                    pointHighlightFill  : '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data                : [100, 120, 110, 150, 80, 140, 130]
-                    },
-                ]
+                    labels  : areaChartLabelBarangay,
+                    datasets: dataSetBarangay
                 }
 
+                // END PER BARANGAY DATA
+
+                // START PER MUNICIPALITY DATA
+                const barChartLabelMunicipality = [];
+                const dataSetMunicipality = [];
+                let municipalityLabelData = {};
+                let votesMunicipalityCount = [];
+
+                @foreach($municipality['municipalityList'] as $muniName)
+                    barChartLabelMunicipality.push('{{ $muniName }}');
+                @endforeach
+
+                @foreach($municipality['votes'] as $key => $voteMunicipality)
+                    municipalityLabelData = {};
+                    municipalityLabelData = {
+                        label               : '{{ $key }}',
+                        backgroundColor     : getColor('{{ $key }}'),
+                    }
+                    @foreach($voteMunicipality as $voteCount)
+                        votesMunicipalityCount.push({{$voteCount}});
+                    @endforeach
+                    municipalityLabelData.data = votesMunicipalityCount;
+                    votesMunicipalityCount = [];
+                    dataSetMunicipality.push(municipalityLabelData);
+                @endforeach
+
+                let perMuni = {
+                labels  : barChartLabelMunicipality,
+                datasets: dataSetMunicipality
+                }
+
+                // END PER MUNICIPALITY DATA
+
                 //-------------
-                //- BAR CHART -
+                //- BAR CHART MONTHLY-
                 //-------------
                 let barChartCanvas = $('#barChart').get(0).getContext('2d')
                 let barChartData = $.extend(true, {}, areaChartData)
@@ -307,7 +252,7 @@
                 })
 
                 //---------------------
-                //- STACKED BAR CHART -
+                //- BAR CHART BARANGAY -
                 //---------------------
                 let stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
                 let stackedBarChartData = $.extend(true, {}, perBarangay)
@@ -376,6 +321,23 @@
                 console.log('startDate', startDate.format('MM/DD/YYYY'))
                 console.log('endDate', endDate.format('MM/DD/YYYY'))
             });
+
+
+            function getColor(code) {
+                switch (code) {
+                    case 'JTU':
+                        return '#FFC0CB';
+                        break;
+                    case 'OSM':
+                        return '#00a65a';
+                        break;
+                    case 'PMU':
+                        return '#654321';
+                        break;
+                    default:
+                        return '#343a40';
+                }
+            }
 
         </script>
     </body>

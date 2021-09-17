@@ -14,4 +14,9 @@ class Votes extends Model
         return $this->belongsTo(Candidate::class, 'candidate_id');
     }
     
+    public function voter_data()
+    {
+        return $this->belongsTo(Voters::class, 'voters_id');
+    }
+    
 }
