@@ -1,6 +1,14 @@
 @php
     if(!Session::get('user')){
         redirect()->to('/login')->send();
+    } else {
+        $user = Session::get('user');
+        if($user->role === 2 && Request::path() != '/') {
+            redirect()->to('/')->send();
+        }
+        if($user->role === 3 && Request::path() !== 'import') {
+            redirect()->to('/import')->send();
+        }
     }
 @endphp
 

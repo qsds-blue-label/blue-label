@@ -92,8 +92,10 @@
                               
                            },
                            success: function (data) {  
-                               if(data?.role === 1){
+                               if(data?.role === 1 || data?.role === 2){
                                    window.location.href = '/'
+                               } else if(data?.role === 3) {
+                                    window.location.href = '/import'
                                }
                                //toastr.success('Votes successfully imported.')
                            },

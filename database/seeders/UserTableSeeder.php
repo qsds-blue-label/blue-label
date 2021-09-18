@@ -23,5 +23,21 @@ class UserTableSeeder extends Seeder
             'remember_token' => 'token',
             'role' => 1,
         ]);
+        User::factory()->create([
+            'name' => 'Viewer',
+            'email' => 'bluelabel-view@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('viewer@2021'),
+            'remember_token' => 'token',
+            'role' => 2,
+        ]);
+        User::factory()->create([
+            'name' => 'Uploader',
+            'email' => 'bluelabel-upload@gmail.com',
+            'email_verified_at' => now(),
+            'password' => bcrypt('uploader@2021'),
+            'remember_token' => 'token',
+            'role' => 3,
+        ]);
     }
 }
