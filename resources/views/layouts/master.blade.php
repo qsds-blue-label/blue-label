@@ -1,3 +1,9 @@
+@php
+    if(!Session::get('user')){
+        redirect()->to('/login')->send();
+    }
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -71,6 +77,7 @@
         <script src="{{url('js/daterangepicker.js')}}"></script>
         <!-- Chart -->
         <script src="{{url('js/Chart.min.js')}}"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.4.0/dist/chartjs-plugin-datalabels.min.js"></script> 
         <!-- Datatables -->
         <script src="{{url('plugins/datatables/jquery.dataTables.min.js')}}"></script>
         <script src="{{url('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
@@ -123,6 +130,20 @@
                 let donutOptions     = {
                     maintainAspectRatio : false,
                     responsive : true,
+                    plugins: {
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                            let sum = 0;
+                            let dataArr = ctx.chart.data.datasets[0].data;
+                            dataArr.map(data => {
+                                sum += Number(data);
+                            });
+                            let percentage = (value*100 / sum).toFixed(2)+"%";
+                            return percentage;                
+                        },
+                            color: '#000',
+                        }
+                    }
                 }
                 //Create pie or douhnut chart
                 // You can switch between pie and douhnut using the method below.
@@ -133,33 +154,53 @@
                 })
 
                 // PER MONTH DATA
-                const areaChartLabelMonthly = [];
-                const dataSetMonthly = [];
+                let areaChartLabelMonthly = [];
+                let dataSetMonthly = [];
                 let monlyLabelData = {};
                 let votesMonthCount = [];
-                @foreach($monthly['monthlist'] as $monthName)
-                    areaChartLabelMonthly.push('{{ $monthName }}');
-                @endforeach
 
-                @foreach($monthly['votes'] as $key => $voteMonth)
-                    monlyLabelData = {};
-                    monlyLabelData = {
-                        label               : '{{ $key }}',
-                        backgroundColor     : getColor('{{ $key }}'),
-                    }
-                    @foreach($voteMonth as $voteCount)
-                        votesMonthCount.push({{$voteCount}});
+                @if(count($monthly['monthlist']) > 0)
+                    @foreach($monthly['monthlist'] as $monthName)
+                        areaChartLabelMonthly.push('{{ $monthName }}');
                     @endforeach
-                    monlyLabelData.data = votesMonthCount;
-                    votesMonthCount = [];
-                    dataSetMonthly.push(monlyLabelData);
-                @endforeach
+
+                    @foreach($monthly['votes'] as $key => $voteMonth)
+                        monlyLabelData = {};
+                        monlyLabelData = {
+                            label               : '{{ $key }}',
+                            backgroundColor     : getColor('{{ $key }}'),
+                        }
+                        @foreach($voteMonth as $voteCount)
+                            votesMonthCount.push({{$voteCount}});
+                        @endforeach
+                        monlyLabelData.data = votesMonthCount;
+                        votesMonthCount = [];
+                        dataSetMonthly.push(monlyLabelData);
+                    @endforeach
+
+                @else
+                    areaChartLabelMonthly = ['N/A', 'N/A'];
+                    dataSetMonthly = [
+                        {
+                            label: 'N/A',
+                            backgroundColor: '#fff',
+                            data: [0, 0]
+                        },
+                        {
+                            label: 'N/A',
+                            backgroundColor: '#fff',
+                            data: [0, 0]
+                        }
+                    ];
+                @endif
 
                 let areaChartData = {
                     labels  : areaChartLabelMonthly,
                     datasets: dataSetMonthly,
                 }
                 // END PER MONTH DATA
+
+                // return;
 
                 // PER BARANGAY DATA
                 const areaChartLabelBarangay = [];
@@ -243,7 +284,7 @@
                                         beginAtZero:true
                                     }
                                 }]
-                            }
+                            },
                 }
 
                 new Chart(barChartCanvas, {
@@ -319,8 +360,10 @@
             });
 
             $('#daterange-btn').on('apply.daterangepicker', function(ev, {startDate, endDate}) {
-                console.log('startDate', startDate.format('MM/DD/YYYY'))
-                console.log('endDate', endDate.format('MM/DD/YYYY'))
+                // console.log('startDate', startDate.format('YYYY-MM-DD'))
+                // console.log('endDate', endDate.format('YYYY-MM-DD'))
+                window.location = '?start=' + startDate.format('YYYY-MM-DD') + '&endDate=' + endDate.format('YYYY-MM-DD');
+
             });
 
 

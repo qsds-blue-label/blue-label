@@ -28,7 +28,7 @@
         <div class="card">
           <div class="card-header">
             <h3 class="card-title">Graph Data</h3>
-            <div class="card-tools flexHorizontal">
+            <div class="card-tools flexHorizontal pr-3">
               <div class="row">
                 <div class="input-group">
                   <button type="button" onclick="rangeFilter()" class="btn btn-default float-right" id="daterange-btn">
@@ -43,6 +43,15 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-12">
+                <div class="callout callout-info">
+                  <h5>Showing Vote Results</h5>
+
+                  <p>{{ $startDate }} - {{ $endDate }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
                 <!-- DONUT CHART -->
                 <div class="card card-primary">
                   <div class="card-header">
@@ -50,6 +59,7 @@
                   </div>
                   <div class="card-body">
                     <canvas id="donutChart" style="min-height: 500px; height: 500px; max-height: 500px; max-width: 100%;"></canvas>
+                    <i style="font-size: 8px; color: red">*NOTE! Data on this chart shows the overall result and does not depend on the date filter.</i>
                   </div>
                   <!-- /.card-body -->
                 </div>

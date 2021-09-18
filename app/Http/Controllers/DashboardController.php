@@ -13,23 +13,26 @@ use App\Models\Candidate;
 class DashboardController extends Controller
 {
     public function index(Request $request) {
-        if(!Session::get('user')){
-            return redirect('/login');
+        $startDate = null;
+        $endDate = null;
+        if(!is_null($request->start) && !is_null($request->endDate)) {
+            $startDate = $request->start;
+            $endDate = $request->endDate;
+        } else {
+            $endDate = Carbon::today()->format('Y-m-d');
+            $startDate = Carbon::today()->subDays(7)->format('Y-m-d');
         }
 
         $candidates = Candidate::with(['votes'])->get();
 
-        $today = Carbon::today()->format('Y-m-d');
-        $lastWeek = Carbon::today()->subDays(60)->format('Y-m-d');
-
         // TOTAL VOTES
-        $overAllVoteData = $this->getTotalVotes($candidates);
+        $overAllVoteData = $this->getTotalVotes($candidates, $endDate, $startDate);
         // PER MONTH VOTES
-        $perMonth = $this->getPerMonthVotes($candidates, $today, $lastWeek);
+        $perMonth = $this->getPerMonthVotes($candidates, $endDate, $startDate);
         // PER BARANGAY VOTES
-        $perBarangay = $this->getPerBarangayVotes($candidates, $today, $lastWeek);
+        $perBarangay = $this->getPerBarangayVotes($candidates, $endDate, $startDate);
         // PER MUNICIPALITY VOTES
-        $perMunicipality = $this->getPerMunicipalityVotes($candidates, $today, $lastWeek);
+        $perMunicipality = $this->getPerMunicipalityVotes($candidates, $endDate, $startDate);
 
 
         $dataChart = array(
@@ -37,6 +40,8 @@ class DashboardController extends Controller
             'monthly' => $perMonth,
             'barangay' => $perBarangay,
             'municipality' => $perMunicipality,
+            'startDate' => Carbon::parse($startDate)->format('F j, Y'),
+            'endDate' => Carbon::parse($endDate)->format('F j, Y'),
         );
 
         // dd($dataChart);
@@ -44,9 +49,7 @@ class DashboardController extends Controller
         return view('index', $dataChart);
     }
 
-    public function getTotalVotes($candidates) {
-        $voteData = Votes::with(['candidate'])->get();
-
+    public function getTotalVotes($candidates, $today, $lastWeek) {
         $overAllVoteData = array();
         foreach ($candidates as $vote) {
             $data = $vote;
