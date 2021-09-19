@@ -83,6 +83,17 @@
                 </li>
               @endif
 
+              @if ($user->role == 1)
+                <li class="nav-item">
+                  <a href="./users" class="nav-link">
+                    <i class="nav-icon far fa-address-book"></i>
+                    <p>
+                      Users
+                    </p>
+                  </a>
+                </li>
+              @endif
+
             </ul>
           </nav>
           <!-- /.sidebar-menu -->
