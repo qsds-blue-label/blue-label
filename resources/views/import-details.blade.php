@@ -20,13 +20,10 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Import Page</h1>
+                <h1>Import Details Page</h1>
             </div>
-            <div class="col-sm-6 text-right">
-                <button type="button" class="btn btn-info " data-toggle="modal" data-target="#modal-generate">
-                   Generate Template
-                </button>
-                <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#modal-upload">
+            <div class="col-sm-6 ">
+                <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modal-upload">
                     Import New Excel
                 </button>
             </div>
@@ -43,7 +40,7 @@
         </div>
         <div class="card-body">
             
-            <table id="data-table" class="table table-bordered table-striped" style="width: calc(100% - 0px) !important;">
+            <table id="data-table" class="table table-bordered table-striped" style="width: calc(100% - 5px) !important;">
                   <thead>
                   <tr>
                     <th>ID</th>
@@ -71,37 +68,6 @@
 <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<div class="modal fade" id="modal-generate">
-    <form id="generate-form" method="get" class="form-horizontal" action="generate-template" >
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Generate Template</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body mb-4"  >
-                <label>Number Of Votes</label>
-                <div class="input-group mb-3">
-                   <input type="text" class="form-control" placeholder="Enter number"  value="1000"  id="number" name="number_of_votes" autocomplete="off" >
-                  <div class="input-group-append">
-                    <span class="input-group-text"><i class="fas fa-calendar"></i></span>
-                  </div>
-                </div>
-        </div>
-                <div class="modal-footer justify-content-between">
-                <input type="hidden" name="hidden_field" value="1" />
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Generate</button>
-                </div>
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </form>
-</div>
-
 <div class="modal fade" id="modal-upload">
     <form id="import-form" method="POST" enctype="multipart/form-data" class="form-horizontal">
         <div class="modal-dialog">

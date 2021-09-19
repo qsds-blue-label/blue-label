@@ -42,3 +42,8 @@ Route::get('/voters', [VotersController::class, 'index']);
 Route::get('/users', [UserController::class, 'index']);
 Route::post('/update-status', [UserController::class, 'update_status']);
 Route::post('/save-user', [UserController::class, 'save']);
+Route::post('/voters-list', [VotersController::class, 'list']);
+Route::get('/votes', [VotesController::class, 'index']);
+Route::get('/delete-imported', [ImportController::class, 'delete']);
+Route::get('/import-details', [ImportController::class, 'details']);
+Route::get('/generate-template', [ImportController::class, 'export']);

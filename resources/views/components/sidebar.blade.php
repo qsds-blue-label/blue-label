@@ -22,7 +22,7 @@
           </div>
     
           <!-- SidebarSearch Form -->
-          <div class="form-inline">
+          <!-- <div class="form-inline">
             <div class="input-group" data-widget="sidebar-search">
               <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
               <div class="input-group-append">
@@ -31,13 +31,13 @@
                 </button>
               </div>
             </div>
-          </div>
+          </div> -->
     
           <!-- Sidebar Menu -->
           <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
-              <li class="nav-header">DASHBOARD</li>
+              <li class="nav-header">Nav Links</li>
 
               @if ($user->role === 1 || $user->role === 2)
                 <li class="nav-item">

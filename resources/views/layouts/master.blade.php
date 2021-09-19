@@ -42,6 +42,9 @@
         <link rel="stylesheet" href="{{url('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')}}">
         <link rel="stylesheet" href="{{url('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')}}">
         <style>
+            .center{
+                text-align: center;
+            }
             .btn-primary {
             color: #fff !important;
             background-color: #a99233 !important;
@@ -58,23 +61,84 @@
                 background-color: #a99233 !important;
                 color: #fff !important;
             }
+            .overlay {
+                position:absolute;
+                top:0;
+                left:0;
+                right:0;
+                bottom:0;
+                background-color:#000000d1;
+                background: url(data:;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABl0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuNUmK/OAAAAATSURBVBhXY2RgYNgHxGAAYuwDAA78AjwwRoQYAAAAAElFTkSuQmCC) repeat scroll transparent\9; /* ie fallback png background image */
+                z-index:9999;
+                color:white;
+                padding-top: 15%;
+                display: none;
+            }
+            .spinner {
+  width: 60px;
+  height: 60px;
+
+  position: relative;
+  margin: 100px auto;
+}
+
+.double-bounce1, .double-bounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #ffeb3b;
+  opacity: 0.6;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+  animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%, 100% { -webkit-transform: scale(0.0) }
+  50% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bounce {
+  0%, 100% { 
+    transform: scale(0.0);
+    -webkit-transform: scale(0.0);
+  } 50% { 
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+            
         </style>
         <meta name="csrf-token" content="{{ csrf_token() }}" />
     </head>
     <body>
+        <div class=overlay>
+           <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+            </div>
+        </div>
         <div class="wrapper">
             <x-navbar />
             <x-sidebar />
             @yield('content')
             <x-footer />
         </div>
+  
         <!-- ./wrapper -->
         <!-- jQuery -->
         <script src="{{url('js/jquery.min.js')}}"></script>
         <!-- Bootstrap 4 -->
         <script src="{{url('js/bootstrap.bundle.min.js')}}"></script>
-        <!-- AdminLTE App -->
-        <script src="{{url('js/adminlte.min.js')}}"></script>
+       
         <!-- SweetAlert2 -->
         <script src="{{url('plugins/sweetalert2/sweetalert2.min.js')}}"></script>
         <!-- Toastr -->
@@ -93,8 +157,10 @@
         <!-- Bootstrap Switch -->
         <script src="{{url('/js/bootstrap-switch.min.js')}}"></script>
 
-
+        <!-- AdminLTE App -->
+        <!-- <script src="{{url('js/adminlte.min.js')}}"></script> -->
         <script>
+           // let loading_img =  '<img src="{{ url('images/loading.gif') }}" >';
             $.ajaxSetup({
                headers: {
                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -109,6 +175,9 @@
         </script>    
        <?php if(Request::path() === 'import') { ?>
         <script src="{{url('js/import.js')}}"></script>
+       <?php } ?>
+       <?php  if (request()->is('import-details')) {?>
+        <script src="{{url('js/import-details.js')}}"></script>
        <?php } ?>
        <?php if(Request::path() === 'voters') { ?>
         <script src="{{url('js/voters.js')}}"></script>
