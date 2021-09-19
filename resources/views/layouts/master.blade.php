@@ -90,6 +90,8 @@
         <script src="{{url('plugins/datatables/jquery.dataTables.min.js')}}"></script>
         <script src="{{url('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
         <script src="{{url('plugins/datatables-responsive/js/dataTables.responsive.min.js')}}"></script>
+        <!-- Bootstrap Switch -->
+        <script src="{{url('/js/bootstrap-switch.min.js')}}"></script>
 
 
         <script>
@@ -113,6 +115,9 @@
        <?php } ?>
        <?php if(Request::path() === 'votes') { ?>
         <script src="{{url('js/votes.js')}}"></script>
+       <?php } ?>
+       <?php if(Request::path() === 'users') { ?>
+        <script src="{{url('js/users.js')}}"></script>
        <?php } ?>
 
        @if(Request::path() === '/')
@@ -368,13 +373,10 @@
             });
 
             $('#daterange-btn').on('apply.daterangepicker', function(ev, {startDate, endDate}) {
-                // console.log('startDate', startDate.format('YYYY-MM-DD'))
-                // console.log('endDate', endDate.format('YYYY-MM-DD'))
                 window.location = '?start=' + startDate.format('YYYY-MM-DD') + '&endDate=' + endDate.format('YYYY-MM-DD');
 
             });
-
-
+            
             function getColor(code) {
                 switch (code) {
                     case 'JTU':

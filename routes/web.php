@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\VotersController;
 use App\Http\Controllers\VotesController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,12 +29,6 @@ Route::get('/logout', function () {
     return redirect('/login');
 });
 
-// Route::get('/import', function () {
-//     return view('import');
-// });
-
-
-
 Route::get('/login', function () {
     return view('login');
 });
@@ -44,4 +39,6 @@ Route::get('/import', [ImportController::class, 'index']);
 Route::post('/import-file', [ImportController::class, 'import']);
 Route::post('/import-list', [ImportController::class, 'list']);
 Route::get('/voters', [VotersController::class, 'index']);
-Route::get('/votes', [VotesController::class, 'index']);
+Route::get('/users', [UserController::class, 'index']);
+Route::post('/update-status', [UserController::class, 'update_status']);
+Route::post('/save-user', [UserController::class, 'save']);
