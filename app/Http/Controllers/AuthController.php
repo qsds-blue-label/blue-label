@@ -31,7 +31,8 @@ class AuthController extends Controller {
             // /$user = Session::get('user');
             //echo $user->user_last_name;        
             Session::put('user',  Auth::user());
-            return response()->json(array('role'=>  Auth::user()->role), 200);
+            if(Auth::user()->enabled == 1) return response()->json(array('role'=>  Auth::user()->role), 200);
+            else return response()->json(array('msg'=> 'disabled'), 401);
         }else{
             return response()->json(array('msg'=> 'Error credentials'), 401);
         }

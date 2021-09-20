@@ -33,13 +33,15 @@ class DashboardController extends Controller
         $perBarangay = $this->getPerBarangayVotes($candidates, $endDate, $startDate);
         // PER MUNICIPALITY VOTES
         $perMunicipality = $this->getPerMunicipalityVotes($candidates, $endDate, $startDate);
-
+        // PER MUNICIPALITY VOTES
+        $perDistrict = $this->getPerDistrictVotes($candidates, $endDate, $startDate);
 
         $dataChart = array(
             'overall' => $overAllVoteData,
             'monthly' => $perMonth,
             'barangay' => $perBarangay,
             'municipality' => $perMunicipality,
+            'district' => $perDistrict,
             'startDate' => Carbon::parse($startDate)->format('F j, Y'),
             'endDate' => Carbon::parse($endDate)->format('F j, Y'),
         );
@@ -210,5 +212,55 @@ class DashboardController extends Controller
         $perBarangay['barangayList'] = $barangayList;
         $perBarangay['votes'] = $barangayCandidateTotal;
         return $perBarangay;
+    }
+
+    public function getPerDistrictVotes($candidates, $today, $lastWeek) {
+        $districtResult = Votes::with(['candidate', 'voter_data'])
+            ->whereBetween('date', [$lastWeek, $today])
+            ->orderBy('date', 'ASC')
+            ->get()
+            ->groupBy(function($val) {
+                return $val->voter_data->district;
+            });
+        $districtList = array();
+        $districtData = array();
+        $perDistrict = array();
+        foreach ($districtResult as $key => $res) {
+            $dataDistrict = array();
+            $dataDistrict['district'] = $key;
+
+            array_push($districtList, $key);
+
+            $votes = [];
+            foreach ($res as $object) {
+                if (isset($object->candidate_id)) {
+                    $vote = $object->candidate->cadidate_code;
+                    if (!isset($votes[$vote])) {
+                        $votes[$vote] = 0;
+                    }
+                    $votes[$vote]++;
+                }
+            }
+            $dataDistrict['votes'] = $votes;
+            array_push($districtData, $dataDistrict);
+        }
+
+        $districtCandidateTotal = array();
+        foreach ($candidates as $cand) {
+            $count = 0;
+            foreach ($districtData as $keyMon =>  $disData) {
+                $totVote = array();
+                foreach ($disData['votes'] as $key => $disDataVote) {
+                    if($key === $cand->cadidate_code) {
+                        $districtCandidateTotal[$key][$count] = $disDataVote;
+                    }
+                }
+                $count++;
+            }
+        }
+
+        $perDistrict['districtList'] = $districtList;
+        $perDistrict['votes'] = $districtCandidateTotal;
+        return $perDistrict;
     }
 }

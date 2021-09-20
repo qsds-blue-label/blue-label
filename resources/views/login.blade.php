@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>AdminLTE 3 | Log in</title>
+        <title>Blue Label | Log in</title>
         <!-- Google Font: Source Sans Pro -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
         <!-- Font Awesome -->
@@ -34,8 +34,15 @@
                     <div id="messages" style="display: none">
                         <div class="alert alert-danger alert-dismissible">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                            <h5><i class="icon fas fa-ban"></i> Erro Found!</h5>
+                            <h5><i class="icon fas fa-ban"></i> Error Found!</h5>
                             User credentials are incorrect. Please try again.
+                        </div>
+                    </div>
+                    <div id="disabled" style="display: none">
+                        <div class="alert alert-danger alert-dismissible">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <h5><i class="icon fas fa-ban"></i> Error Found!</h5>
+                            User Account Disabled!
                         </div>
                     </div>
                     <form id="login-form" method="post">
@@ -100,7 +107,10 @@
                                //toastr.success('Votes successfully imported.')
                            },
                            error: function (data) {  
-                              $("#messages").show();
+                            //    console.log(data.responseJSON.msg)
+                               const msg = data.responseJSON.msg;
+                               if(msg === 'disabled') $("#disabled").show();
+                               else $("#messages").show();
                            }
                        });
                    });
