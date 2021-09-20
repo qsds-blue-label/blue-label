@@ -1,11 +1,12 @@
 $(function() {
+    
     //$('[data-toggle="tooltip"]').tooltip();
     var oTable = $('#data-table').DataTable({
         "bDestroy": true,
         "aaSorting": [],
         "ordering": false,
         "searching": true,
-        "iDisplayLength": 2,
+        "iDisplayLength": 10,
         "aLengthMenu": [
             [10, 50, 100, 200, 500],
             [10, 50, 100, 200, 500]
@@ -20,9 +21,11 @@ $(function() {
             //"sProcessing": '' + image + '',
         },
         "serverSide": true,
-        "columnDefs": [
-            { className: 'center', targets: 4, "width": "100px" }
-        ],
+        "columnDefs": [{
+            className: 'center',
+            targets: 4,
+            "width": "100px"
+        }],
         "ajax": {
             url: "./import-list",
             type: 'POST',
@@ -66,16 +69,28 @@ $(document).ready(function() {
             beforeSend: function() {
                 $("#import").val("Importing");
             },
-            success: function(data) {  console.log(data)
-                // $("#modal-upload").modal('hide')
-                // toastr.success('Votes successfully imported.')
-                // setTimeout(() => {
-                //     location.reload();
-                // }, 2000);
+            success: function(data) {
+                setTimeout(() => {
+                $("#modal-upload").modal('hide')
+
+                Swal.fire(
+                    'Success!',
+                    'Votes successfully imported.',
+                    'success'
+                ).then(okay => {
+                    if (okay) {
+                        location.reload();
+                    }
+                });
+            }, 1500)
             },
             error: function(data) {
                 $("#modal-upload").modal('hide')
-                toastr.error('Error was occured while uploading your file. PLease contact administrator.')
+                Swal.fire(
+                    'Oops...!',
+                    'Error was occured while uploading your file. PLease contact administrator.',
+                    'error'
+                )
                 $(".overlay").hide();
             }
         });
@@ -101,7 +116,7 @@ $(document).on('change', 'input[type="file"]', function(event) {
 
 function view_details(el) {
     window.location = `import-details?id=${parseInt($(el).attr('imported_id'))}`;
-    
+
 }
 
 function delete_import(el) {
@@ -113,28 +128,35 @@ function delete_import(el) {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
-      }).then((result) => {
-        $(".overlay").show();
-        $.ajax({
-            url: "delete-imported",
-            method: "get",
-            data: { imported_id:  parseInt($(el).attr('imported_id')) },
-            success: function (data) { 
-                setTimeout(() =>{
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $(".overlay").show();
+            $.ajax({
+                url: "delete-imported",
+                method: "get",
+                data: {
+                    imported_id: parseInt($(el).attr('imported_id'))
+                },
+                success: function(data) {
+                    setTimeout(() => {
+                        $(".overlay").hide();
+                        $(el).closest('tr').hide();
+                        Swal.fire(
+                            'Deleted!',
+                            'Imported file has been deleted.',
+                            'success'
+                        )
+                    }, 1500)
+                },
+                error: function(data) {
                     $(".overlay").hide();
-                    $(el).closest('tr').hide();
                     Swal.fire(
-                        'Deleted!',
-                        'Imported file has been deleted.',
-                        'success'
+                        'Oops...!',
+                        'Error was occured while uploading your file. PLease contact administrator.',
+                        'error'
                     )
-                }, 1500)
-            },
-            error: function (data) {  
-                $(".overlay").hide();
-                toastr.error('Error was occured while uploading your file. PLease contact administrator.')
-            }
-        });
-          
-      })
+                }
+            });
+        }
+    })
 }

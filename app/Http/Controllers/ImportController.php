@@ -31,28 +31,32 @@ class ImportController extends Controller {
 
     public function import(Request $request) { 
         $user = Session::get('user');
-        $excel = Importer::make('Excel');
+       
+        $extension = $request->file->getClientOriginalExtension();
+        if($extension == 'csv'){
+            $excel = Importer::make('Csv');
+        }else{
+            $excel = Importer::make('Excel');
+        }
         $date = $request->date;
         $filepath = $request->file('file')->getRealPath();
         $excel->load($filepath);
         $collection = $excel->getCollection();
-        return $collection;
+      
         $i = 0;
-        
         $import = new Imported_files;
         $import->uploaded_by            = $user->id;
         $import->number_of_rows         = count($collection);
         $import->save();
         if($import->id){
             for ($i=0; $i < count($collection) ; $i++) { 
-               
-                if($i > 1){ 
+                if($i > 0){ 
                     $candidate_code = strtoupper($collection[$i][9]);
                     $precent = $collection[$i][4];
                     // check if voters is already added
                     $list = Voters::select('*')->where('voters_name', $collection[$i][1])->where('precent',$precent)->first();
                     $candidate = Candidate::select('*')->where('cadidate_code', $candidate_code)->first();
-                    if($candidate){
+                    if($candidate && $collection[$i][1]){
                         $candidate_id = $candidate->id; 
                         if(!$list){
                             $data = new Voters;
@@ -127,6 +131,7 @@ class ImportController extends Controller {
 
     public function delete(Request $request) {
         DB::table('imported_files')->delete($request->imported_id);
+        DB::table('votes')->where('imported_id', $request->imported_id)->delete();
     }
 
     public function details(Request $request) {
@@ -137,7 +142,35 @@ class ImportController extends Controller {
         return Excel::download(new FileExport($request->number_of_votes), 'votes_template.xlsx');
     }
 
+    public function detailsList(Request $request) {
+        $data = array();
+        $search = $_POST['search'];
+        $draw = $_POST['draw'];
+        $length = $_POST['length'];
+        $start = $_POST['start'];
+        $filters_query = '';
+        if($search['value'] !=''){
+            $filters_query=  "WHERE    CONCAT_ws('-', voters_name,voters_address,legend,precent,municipality,barangay,district,age) LIKE '%{$search['value']}%'";
+        }
+        $list  = DB::select("SELECT * from votes  INNER JOIN voters  ON votes.voters_id=voters.id  INNER JOIN candidate ON votes.candidate_id=candidate.id  $filters_query AND imported_id=$request->imported_id LIMIT $length  OFFSET  $start  ");
+        foreach ($list as $k) {
+           $button_details = '
+               <div class="btn-group">
+                    <button type="button" class="btn btn-info" title="View Details"  imported_id="'.$k->id .'" onclick="edit_details(this)"> <i class="fas fa-edit"></i></button>
+                </div>
+           ';
+            $data[] = array('<b>'.$k->voters_name.'</b>- <small>'.$k->precent.'</small><p>'.$k->voters_address.'</p><p>'.$k->barangay.', '.$k->municipality.' '.$k->district.'</p>',$k->date,'<b>'.$k->cadidate_code.'</b> - '.$k->cadidate_name.'');
+        }
+        $total_rows = DB::select("SELECT COUNT(*) AS total FROM  votes  INNER JOIN voters  ON votes.voters_id=voters.id   INNER JOIN candidate ON votes.candidate_id=candidate.id $filters_query AND imported_id=$request->imported_id");
+        $total_pages  = ceil($total_rows[0]->total);
+        echo json_encode(array('draw' => $draw, 'recordsTotal', $total_pages,  'data' => $data,'search'=>$search,'length'=>$length,'draw'=>$draw,'start'=>$start, 'recordsFiltered' => $total_pages ));
+       
+    } 
+
+
     
 
     
 }
+
+

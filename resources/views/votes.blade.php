@@ -28,7 +28,7 @@
         </div>
         <div class="card-body">
             
-            <table id="data-table" class="table table-bordered table-striped">
+            <table id="data-table" class="table table-bordered table-striped" style="width: calc(100% - 0px) !important;">
                   <thead>
                   <tr>
                     <th>Voter's</th>
@@ -37,17 +37,6 @@
                   </tr>
                   </thead>
                   <tbody>
-                    <?php foreach($list as $k) { ?>
-                        <tr>
-                            <td>
-                              <b><?= $k->voters_name ?></b>  - <small><?= $k->precent ?></small>
-                              <p><?= $k->voters_address ?></p>
-                              <p><?= $k->barangay ?>, <?= $k->municipality ?> <?= $k->district ?></p>
-                            </td>
-                            <td><?= $k->date ?></td>
-                            <td><b><?= $k->cadidate_code ?></b> - <?= $k->cadidate_name ?></td>
-                        </tr>
-                     <?php } ?>
                   </tbody>
                   <tfoot>
                   <tr>

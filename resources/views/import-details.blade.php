@@ -20,12 +20,9 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Import Details Page</h1>
+                <h1>Import Details Page - <small>IMPORT-00002<?= $_GET['id'] ?></small></h1>
             </div>
             <div class="col-sm-6 ">
-                <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modal-upload">
-                    Import New Excel
-                </button>
             </div>
         </div>
     </div>
@@ -40,25 +37,21 @@
         </div>
         <div class="card-body">
             
-            <table id="data-table" class="table table-bordered table-striped" style="width: calc(100% - 5px) !important;">
+        <table id="data-table" class="table table-bordered table-striped" style="width: calc(100% - 0px) !important;">
                   <thead>
                   <tr>
-                    <th>ID</th>
-                    <th>Date Uploaded</th>
-                    <th>Uploaded By</th>
-                    <th>Number of Votes</th>
-                    <th>Action</th>
+                    <th>Voter's</th>
+                    <th>Date Voted </th>
+                    <th>Candidate </th>
                   </tr>
                   </thead>
                   <tbody>
                   </tbody>
                   <tfoot>
                   <tr>
-                    <th>ID</th>
-                    <th>Date Uploaded</th>
-                    <th>Uploaded By</th>
-                    <th>Number of Votes</th>
-                    <th>Action</th>
+                    <th>Voter's</th>
+                    <th>Date Voted </th>
+                    <th>Candidate </th>
                   </tr>
                   </tfoot>
                 </table>
@@ -121,4 +114,7 @@
         <!-- /.modal-dialog -->
     </form>
 </div>
+<script>
+    let imported_id = "<?= $_GET['id'] ?>";
+</script>
 @endsection

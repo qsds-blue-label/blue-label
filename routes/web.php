@@ -47,3 +47,5 @@ Route::get('/votes', [VotesController::class, 'index']);
 Route::get('/delete-imported', [ImportController::class, 'delete']);
 Route::get('/import-details', [ImportController::class, 'details']);
 Route::get('/generate-template', [ImportController::class, 'export']);
+Route::post('/votes-list', [VotesController::class, 'list']);
+Route::post('/import-details-list', [ImportController::class, 'detailsList']);
