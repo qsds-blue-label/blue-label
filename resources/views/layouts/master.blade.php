@@ -115,6 +115,10 @@
     -webkit-transform: scale(1.0);
   }
 }
+
+.swal2-container {
+    z-index: 999999999
+}
             
         </style>
         <meta name="csrf-token" content="{{ csrf_token() }}" />
