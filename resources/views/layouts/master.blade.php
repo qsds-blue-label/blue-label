@@ -344,11 +344,42 @@
                 @endforeach
 
                 let perMuni = {
-                labels  : barChartLabelMunicipality,
-                datasets: dataSetMunicipality
+                    labels  : barChartLabelMunicipality,
+                    datasets: dataSetMunicipality
                 }
 
                 // END PER MUNICIPALITY DATA
+
+                // START PER DISTRICT DATA
+                const barChartLabelDistrict = [];
+                const dataSetDistrict = [];
+                let districtLabelData = {};
+                let votesDistrictCount = [];
+
+                @foreach($district['districtList'] as $distName)
+                    barChartLabelDistrict.push('{{ $distName }}');
+                @endforeach
+
+                @foreach($district['votes'] as $key => $voteDistrict)
+                    districtLabelData = {};
+                    districtLabelData = {
+                        label               : '{{ $key }}',
+                        backgroundColor     : getColor('{{ $key }}'),
+                    }
+                    @foreach($voteDistrict as $voteCount)
+                        votesDistrictCount.push({{$voteCount}});
+                    @endforeach
+                    districtLabelData.data = votesDistrictCount;
+                    votesDistrictCount = [];
+                    dataSetDistrict.push(districtLabelData);
+                @endforeach
+
+                let perDist = {
+                    labels  : barChartLabelDistrict,
+                    datasets: dataSetDistrict
+                }
+
+                // END PER DISTRICT DATA
 
                 //-------------
                 //- BAR CHART MONTHLY-
@@ -402,7 +433,10 @@
                     data: stackedBarChartData,
                     options: stackedBarChartOptions
                 })
-                
+
+                //---------------------
+                //- BAR CHART MUNICIPALITY -
+                //---------------------
                 let stackedBarChartCanvas1 = $('#data-muni').get(0).getContext('2d')
                 let stackedBarChartData1 = $.extend(true, {}, perMuni)
 
@@ -424,7 +458,33 @@
                     options: stackedBarChartOptions1
                 })
 
+                //---------------------
+                //- BAR CHART DISTRICT -
+                //---------------------
+                let stackedBarChartCanvasDistrict = $('#data-dist').get(0).getContext('2d')
+                let stackedBarChartDataDistrict = $.extend(true, {}, perDist)
 
+                let stackedBarChartOptionsDistrict = {
+                    responsive              : true,
+                    maintainAspectRatio     : false,
+                    scales: {
+                        xAxes: [{
+                        stacked: true,
+                        }],
+                        yAxes: [{
+                        stacked: true
+                        }]
+                    }
+                }
+                new Chart(stackedBarChartCanvasDistrict, {
+                    type: 'bar',
+                    data: stackedBarChartDataDistrict,
+                    options: stackedBarChartOptionsDistrict
+                })
+
+                //---------------------
+                //- RANGE PICKER -
+                //---------------------
                 $('#daterange-btn').daterangepicker(
                 {
                     ranges   : {

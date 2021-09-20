@@ -83,36 +83,55 @@
                 </div>
                 <!-- /.card -->
               </div>
+
               <div class="col-md-12">
-              <!-- STACKED BAR CHART -->
-              <div class="card card-primary">
-                <div class="card-header">
-                  <h3 class="card-title">Per Barangay</h3>
-                </div>
-                <div class="card-body">
-                  <div class="chart">
-                    <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                <!-- STACKED BAR CHART -->
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Per District</h3>
                   </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="data-dist" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
               </div>
-              <!-- /.card -->
-                </div>
+
               <div class="col-md-12">
-              <!-- STACKED BAR CHART -->
-              <div class="card card-primary">
-                <div class="card-header">
-                  <h3 class="card-title">Per Municipality</h3>
-                </div>
-                <div class="card-body">
-                  <div class="chart">
-                    <canvas id="data-muni" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                <!-- STACKED BAR CHART -->
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Per Municipality</h3>
                   </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="data-muni" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
-                <!-- /.card-body -->
+                <!-- /.card -->
               </div>
-              <!-- /.card -->
+
+              <div class="col-md-12">
+                <!-- STACKED BAR CHART -->
+                <div class="card card-primary">
+                  <div class="card-header">
+                    <h3 class="card-title">Per Barangay</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="chart">
+                      <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                    </div>
+                  </div>
+                  <!-- /.card-body -->
                 </div>
+                <!-- /.card -->
+              </div>
+
             </div>
 
           </div>
